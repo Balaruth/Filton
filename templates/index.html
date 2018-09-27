@@ -1,0 +1,16 @@
+{% extends "frame.html" %}
+
+{% block title %}
+    Write in Guestbook
+{% endblock title %}
+
+{% block content %}
+    <h1>Write in the Filton Hotel Guestbook!</h1>
+    <br>
+    <form method="post">
+        <input type="text" name="fullname" placeholder="Your Name">
+        <input type="text" name="email" placeholder="Your Email Address">
+        <textarea name="message" rows="5" cols="100">Your Message</textarea>
+        <input type="submit" value="Write in the Guestbook!">
+    </form>
+{% endblock content %}
