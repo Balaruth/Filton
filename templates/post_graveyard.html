@@ -1,16 +1,16 @@
 {% extends "frame.html" %}
 
 {% block title %}
-    Filton Hotel Guestbook
+    Write in Guestbook
 {% endblock title %}
 
 {% block content %}
-    <h1>What our guests wrote in our Guestbook:</h1>
+    <h1>Admin: All deleted entries</h1>
     <br>
     {% if messages %}
         <ul>
             {% for message in messages %}
-                <p>{{ message.message_author }}: <a href="/message/{{ message.key.id() }}">{{ message.message_text }}</a></p>
+                <p>{{ message.message_author }} ({{message.message_email }})<a href="/message/{{ message.key.id() }}">{{ message.message_text }}</a></p>
             {% endfor %}
         </ul>
     {% endif -%}

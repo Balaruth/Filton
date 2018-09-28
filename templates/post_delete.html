@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "frame.html" %}
 
-</body>
-</html>
+{% block title %}
+    Delete Entry
+{% endblock title %}
+
+{% block content %}
+    <h1>Do you really want to delete this message?</h1>
+
+    <form action="/message/{{ message.key.id() }}/post_delete" method="post">
+        <button type="submit">Confirm deletion</button>
+    </form>
+{% endblock content %}

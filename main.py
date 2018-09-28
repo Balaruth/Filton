@@ -37,6 +37,8 @@ class MainHandler(BaseHandler):
         gb_email = self.request.get("email")
         gb_message = self.request.get("message")
 
+        if not gb_name:
+            gb_name = "Anonymous"
 
         import re
         antiscript = re.findall("<(\w+)>", gb_name)
@@ -56,10 +58,73 @@ class PostsHandler(BaseHandler):
         params = {"messages": messages}
         return self.render_template("posts.html", params=params)
 
+class DetailHandler(BaseHandler):
+    def get(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        params = {"message": message}
+        return self.render_template("post_detail.html", params=params)
+
+class EditHandler(BaseHandler):
+    def get(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        params = {"message": message}
+        return self.render_template("post_edit.html", params=params)
+
+    def post(self, message_id):
+        new_text = self.request.get("message")
+        message = Message.get_by_id(int(message_id))
+        message.message_text = new_text
+        message.put()
+        return self.redirect_to("posts")
+
+class DeleteHandler(BaseHandler):
+    def get(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        params = {"message": message}
+        return self.render_template("post_delete.html", params=params)
+
+    def post(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        message.deleted = True
+        message.put()
+        return self.redirect_to("posts")
+
+class GraveyardHandler(BaseHandler):
+    def get(self):
+        messages = Message.query(Message.deleted == True).fetch()
+        params = {"messages": messages}
+        return self.render_template("post_graveyard.html", params=params)
+
+class GraveyardPermadeleteHandler(BaseHandler):
+    def get(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        params = {"message": message}
+        return self.render_template("post_graveyard_perma_delete.html", params=params)
+
+    def post(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        message.key.delete()
+        return self.redirect_to("graveyard")
+
+class GraveyardRestoreHandler(BaseHandler):
+    def get(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        params = {"message": message}
+        return self.render_template("post_graveyard_restore.html", params=params)
+
+    def post(self, message_id):
+        message = Message.get_by_id(int(message_id))
+        message.deleted = False
+        message.put()
+        return self.redirect_to("graveyard")
+
 app = webapp2.WSGIApplication([
-    webapp2.Route('/', MainHandler, name="main"),
+    webapp2.Route('/', MainHandler),
     webapp2.Route('/posts', PostsHandler, name="posts"),
-    webapp2.Route('/message/{{ message.key.id()', DetailHandler),
-    webapp2.Route('/message/{{ message.key.id()/post_edit', EditHandler),
-    webapp2.Route('/message/{{ message.key.id()/post_delete', DeleteHandler),
+    webapp2.Route('/message/<message_id:\d+>', DetailHandler),
+    webapp2.Route('/message/<message_id:\d+>/post_edit', EditHandler),
+    webapp2.Route('/message/<message_id:\d+>/post_delete', DeleteHandler),
+    webapp2.Route('/post_graveyard', GraveyardHandler, name="graveyard"),
+    webapp2.Route('/message/<message_id:\d+>/post_graveyard_perma_delete', GraveyardPermadeleteHandler),
+    webapp2.Route('/message/<message_id:\d+>/post_graveyard_restore', GraveyardRestoreHandler),
 ], debug=True)

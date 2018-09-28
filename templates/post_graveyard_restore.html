@@ -1,0 +1,13 @@
+{% extends "frame.html" %}
+
+{% block title %}
+    Restore Entry
+{% endblock title %}
+
+{% block content %}
+    <h1>Do you really want to restore this message? It will be visible to all users!</h1>
+
+    <form action="/message/{{ message.key.id() }}/post_graveyard_restore" method="post">
+        <button type="submit">Confirm restoration</button>
+    </form>
+{% endblock content %}

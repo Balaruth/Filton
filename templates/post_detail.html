@@ -1,0 +1,24 @@
+{% extends "frame.html" %}
+
+{% block title %}
+    Filton Hotel Guestbook
+{% endblock title %}
+
+{% block content %}
+    <h1>Message info</h1>
+    <br>
+    <p>Name: {{ message.message_author }}</p>
+    <p>Text: {{ message.message_text }}</p>
+    <p>Date: {{ message.created }}</p>
+
+    {% if message.deleted == False %}
+        <a href="/message/{{ message.key.id() }}/post_edit">Edit message</a>
+        <br>
+        <a href="/message/{{ message.key.id() }}/post_delete">Delete message</a>
+    {% elif message.deleted == True %}
+        <a href="/message/{{ message.key.id() }}/post_graveyard_perma_delete">Permanently delete message</a>
+        <br>
+        <a href="/message/{{ message.key.id() }}/post_graveyard_restore">Restore message</a>
+    {% endif -%}
+
+{% endblock content%}

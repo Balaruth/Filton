@@ -1,0 +1,19 @@
+#title {
+    color: black;
+}
+
+#title:hover{
+    text-decoration: none;
+    color: lightgray;
+}
+
+input {
+    border-radius: 5px;
+    margin: 2px 0px;
+    display: inline;
+}
+
+textarea {
+    border-radius: 5px;
+    margin: 2px 0px;
+}
